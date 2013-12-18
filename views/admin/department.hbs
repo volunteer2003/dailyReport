@@ -12,12 +12,12 @@
 </head>
 <body class="admin-department">
 <header class="navbar">
-    <a class="brand" href="/" title="home page">Daily Report</a>
+    <a class="brand" href="/" title="home page">Weekly Report</a>
     <ul class="nav">
-        <li class="active"><a href="#">部门</a></li>
-        <li><a href="/admin/users">用户</a></li>
-        <li><a href="/admin/admingroup">权限</a></li>
-        <li ><a href="/logout">退出</a></li>
+        <li class="active"><a href="/admin">Department</a></li>
+        <li><a href="/admin/users">User</a></li>
+        <li><a href="/admin/admingroup">Authority</a></li>
+        <li ><a href="/logout">Logout</a></li>
     </ul>
 </header>
 <div id="dialog-confirm" title="删除部门" style="display:none">
@@ -36,13 +36,13 @@
 
         <label for="parentDepartment">上级部门:</label>
         <select id="parentDepartment"
-                data-bind="options: departments, optionsText:'name',value:selectedParentDepartment, optionsCaption: '没有上级部门'"></select>
-        <div data-bind="visible: !updateDepartment()"><input id="createBtn" type="button" value="创建" class="btn btn-primary"
+                data-bind="options: departments, optionsText:'name',value:selectedParentDepartment, optionsCaption: 'NULL'"></select>
+        <div data-bind="visible: !updateDepartment()"><input id="createBtn" type="button" value="Create" class="btn btn-primary"
                     data-bind="click:submit, enable: validDepartmentName() && validDepartmentRelation()" required="false"/></div>
 
-        <div data-bind="visible: updateDepartment()"><input id="updateBtn" type="button" value="更新" class="btn btn-primary"
+        <div data-bind="visible: updateDepartment()"><input id="updateBtn" type="button" value="Update" class="btn btn-primary"
                     data-bind="enable: validUpdateDepartmentName() && validUpdateDepartmentRelation()" required="false"/>
-            <input id="cancelUpdateBtn" type="button" value="取消" class="btn btn-primary"
+            <input id="cancelUpdateBtn" type="button" value="Cancle" class="btn btn-primary"
                    data-bind="enable: validUpdateDepartmentName()" required="false"/></div>
     </div>
 

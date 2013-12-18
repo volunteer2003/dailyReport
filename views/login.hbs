@@ -10,20 +10,20 @@
 </head>
 <body class="login">
     <header class="navbar">
-        <a class="brand" href="/" title="home page">Daily Report</a>
+        <a class="brand" href="/" title="home page">Weekly Report</a>
     </header>
     <section id="loginDiv" class="container">
-        <div class="title"> <i class="icon-user"></i><h1>用户登陆</h1></div>
+        <div class="title"> <i class="icon-user"></i><h1>User Login</h1></div>
         <p id="errorTip" data-bind="text: errorTip, visible:showErrorTip"></p>
-        <label for="userName">用户名:</label>
+        <label for="userName">Username</label>
         <input type="text" required="required" name="userName" id="userName"
                data-bind="value: userName, valueUpdate:'keyup'"/>
         <br />
-        <label for="password">密码:</label>
+        <label for="password">PASSCODE</label>
         <input type="password" required="required" name="password" id="password"
                data-bind="value: password, valueUpdate:'keyup'"/>
         <div>
-            <input id="submitBtn" type="submit" value="提交" class="btn btn-primary"
+            <input id="submitBtn" type="submit" value="Sign In" class="btn btn-primary"
                data-bind="click: submit, enable:valid" /></div>
     </section>
 </body>
