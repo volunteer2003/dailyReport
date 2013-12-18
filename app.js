@@ -4,13 +4,26 @@
  */
 
 var express = require('express')
-  , http = require('http')
+//  , http = require('http')
   , routeProfile = require('./routes/ruteProfile')
   , path = require('path')
   , redis = require("redis")
   , RedisStore = require('connect-redis')(express)
   , appport = require('./config').app.port
   , sessiondbconfig = require('./config').sessiondb;
+
+var https = require('https');
+var fs = require('fs');
+  
+var hskey = fs.readFileSync('./keys/hacksparrow-key.pem');
+var hscert = fs.readFileSync('./keys/hacksparrow-cert.pem');
+
+var options = {
+    key: hskey,
+    cert: hscert
+};
+
+
 
 var app = express();
 var redisClient = redis.createClient();
@@ -39,6 +52,6 @@ if ('development' == app.get('env')) {
 
 routeProfile.createRutes(app);
 
-http.createServer(app).listen(app.get('port'), function(){
+https.createServer(options,app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
