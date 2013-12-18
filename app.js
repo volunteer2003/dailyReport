@@ -53,5 +53,5 @@ if ('development' == app.get('env')) {
 routeProfile.createRutes(app);
 
 https.createServer(options,app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+  console.log('Express https server listening on port ' + app.get('port'));
 });

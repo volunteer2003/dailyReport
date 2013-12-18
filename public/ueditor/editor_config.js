@@ -71,7 +71,7 @@
         ,getMovieUrl:URL+"php/getMovie.php"                   //视频数据获取地址
 
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的从新定义
-        ,toolbars:[["bold","italic","underline","strikethrough","forecolor","fontsize","fontfamily","insertunorderedlist","insertorderedlist","separate","horizontal","unlink","link","backcolor","directionalityltr","directionalityrtl","pasteplain","removeformat","justifyleft","justifycenter","justifyright","justifyjustify","indent","paragraph","rowspacingbottom","rowspacingtop","lineheight","inserttable","deletetable","mergeright","mergedown","splittorows","splittocols","splittocells","mergecells","insertcol","insertrow","deletecol","deleterow","insertparagraphbeforetable","superscript","subscript","undo","redo","selectall","spechars","highlightcode"]]
+        ,toolbars:[["bold","italic","underline","strikethrough","forecolor","fontsize","fontfamily","insertunorderedlist","insertorderedlist","separate","horizontal","unlink","link","backcolor","directionalityltr","directionalityrtl","pasteplain","removeformat","justifyleft","justifycenter","justifyright","justifyjustify","indent","paragraph","rowspacingbottom","rowspacingtop","lineheight","inserttable","deletetable","mergeright","mergedown","splittorows","splittocols","splittocells","mergecells","insertcol","insertrow","deletecol","deleterow","insertparagraphbeforetable","superscript","subscript","undo","redo","selectall","spechars","highlightcode","template"]]
         //当鼠标放在工具栏上时显示的tooltip提示,留空支持自动多语言配置，否则以配置值为准
         ,labelMap:{
             'anchor':'', 'undo':''
@@ -83,8 +83,9 @@
 
         //语言配置项,默认是zh-cn。有需要的话也可以使用如下这样的方式来自动多语言切换，当然，前提条件是lang文件夹下存在对应的语言文件：
         //lang值也可以通过自动获取 (navigator.language||navigator.browserLanguage ||navigator.userLanguage).toLowerCase()
-    //,lang:'zh-cn'
-
+		,lang:'zh-cn'
+		//,lang:'en'
+		
         //,langPath:URL +"lang/"
 
         //主题配置项,默认是default。有需要的话也可以使用如下这样的方式来自动多主题切换，当然，前提条件是themes文件夹下存在对应的主题文件：
@@ -105,17 +106,17 @@
 
         ,initialFrameWidth:900  //初始化编辑器宽度,默认1000
         ,initialFrameHeight:320  //初始化编辑器高度,默认320
-
+		
         //,autoClearinitialContent:true //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
 
         //,iframeCssUrl: URL + '/themes/iframe.css' //给编辑器内部引入一个css文件
         //,textarea:'editorValue' // 提交表单时，服务器获取编辑器提交内容的所用的参数，多实例时可以给容器name属性，会将name给定的值最为每个实例的键值，不用每次实例化的时候都设置这个值
         //,focus:true //初始化时，是否让编辑器获得焦点true或false
-
+		
         //,autoClearEmptyNode : true //getContent时，是否删除空的inlineElement节点（包括嵌套的情况）
 
         //,fullscreen : false //是否开启初始化时即全屏，默认关闭
-
+		
         //,readonly : false /编辑器初始化结束后,编辑区域是否是只读的，默认是false
 
         ,zIndex : 0     //编辑器层级的基数,默认是900
@@ -151,6 +152,7 @@
         //    'square' : ''   //'■ 小方块'
         //}
         //fontfamily
+		,fontfamily:{ label:'',name:'timesNewRoman',val:'times new roman'}
         //字体设置 label留空支持多语言自动切换，若配置，则以配置值为准
 //        ,'fontfamily':[
 //            { label:'',name:'songti',val:'宋体,SimSun'},
@@ -181,6 +183,7 @@
         //行内间距 值和显示的名字相同
         //,'lineheight':['1', '1.5','1.75','2', '3', '4', '5']
         //右键菜单的内容，可以参考plugins/contextmenu.js里边的默认菜单的例子，label留空支持国际化，否则以此配置为准
+
 //        ,contextMenu:[
 //            {
 //                label:'',       //显示的名称
