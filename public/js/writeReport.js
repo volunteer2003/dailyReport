@@ -18,7 +18,7 @@
         _ref = dateStr.split("-"), year = _ref[0], months = _ref[1], date = _ref[2];
         validator.check(year).notNull().isNumeric().len(4, 4);
         validator.check(months).notNull().isNumeric().len(1, 2);
-        validator.check(date).notNull().isNumeric().len(1, 2);
+        //validator.check(date).notNull().isNumeric().len(1, 2);
         return true;
       } catch (error) {
         return false;
@@ -30,16 +30,39 @@
   init = function() {
     var dateStr, getDateStr, reportvm;
     $("#dateTxt").datepicker();
-    $("#dateTxt").datepicker("option", "dateFormat", "yy-mm-dd");
+    $("#dateTxt").datepicker("option", "dateFormat", "yy-mm-dd to yy-mm-dd");
     reportvm = new WriteReportViewModel();
     ko.applyBindings(reportvm);
     getDateStr = function(date) {
-      var month, today, year;
-      today = new Date();
+      var month, today, year, day;
+	  var month_first, day_first, year_first; // for calc the first day and the last day of the week
+	  var month_last, day_last, year_last;
+      day = new Date();
+	  day_new = new Date();
       year = date.getFullYear();
       month = date.getMonth() + 1;
-      date = date.getDate();
-      return "" + year + "-" + month + "-" + date;
+	  day = date.getDate();
+      
+	  //return "" + year + "-" + month + "-" + day;
+	  
+	  // calc the first day of the week
+	  day_new.setDate(date.getDate() - date.getDay() + 1);
+	  year_first = day_new.getFullYear();
+      month_first = day_new.getMonth() + 1;
+	  day_first = day_new.getDate();
+	  //return "" + year_first + "-" + month_first + "-" + day_first;
+	  
+	  // calc the last day of the week
+	  day_new.setDate(day_new.getDate() + 6);
+	  year_last = day_new.getFullYear();
+      month_last = day_new.getMonth() + 1;
+	  day_last = day_new.getDate();
+	  //return "" + year_last + "-" + month_last + "-" + day_last;
+	  
+	  return "" + year_first + "-" + month_first + "-" + day_first + " to " + year_last + "-" + month_last + "-" + day_last;
+	  
+	  
+      
     };
     dateStr = getDateStr(new Date());
     reportvm.dateTxt(dateStr);

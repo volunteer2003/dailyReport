@@ -10,6 +10,20 @@
     <script type="text/javascript" src='/js/bootstrap.min.js'></script>
     <script type="text/javascript" src="/ueditor/editor_config.js"></script>
     <script type="text/javascript" src="/ueditor/editor_all.js"></script>
+	
+	<script type="text/javascript">
+		//<![CDATA[
+		var time = new Date(), msg = [];
+		time.setDate(time.getDate() - time.getDay() + 1);
+		msg.push('The first day of this week is:\t' + time.getDate());
+		msg.push('The first day of this week is:\t' + time.toDateString());
+		time.setDate(time.getDate() + 6);
+		msg.push('The last day of this week is:\t' + time.toDateString());
+		//alert(msg.join('\n'));
+	//]]>
+	</script>
+	
+	
 </head>
 <body class="writing">
 <header class="navbar">
@@ -34,7 +48,8 @@
     <article id="reportCreation">
         <div>
 			<label for="dateTxt">Date:</label>
-            <input id="dateTxt" type="text" required="required"
+            <!-<input readonly id="dateTxt" type="text" required="required"-->
+			<input readonly id="dateTxt" type="text" required="required"
                    data-bind="value:dateTxt, valueUpdate:'keyup'"/></div>
         <div>
             <label for="content">Content:</label>

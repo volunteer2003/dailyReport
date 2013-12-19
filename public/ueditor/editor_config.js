@@ -102,7 +102,7 @@
         //常用配置项目
         //,isShow : true    //默认显示编辑器
 
-        ,initialContent:''    //初始化编辑器的内容,也可以通过textarea/script给值，看官网例子
+        ,initialContent:'<h2 class="ue_t">UEditor！</h2>'    //初始化编辑器的内容,也可以通过textarea/script给值，看官网例子
 
         ,initialFrameWidth:900  //初始化编辑器宽度,默认1000
         ,initialFrameHeight:320  //初始化编辑器高度,默认320

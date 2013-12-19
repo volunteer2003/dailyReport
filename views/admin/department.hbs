@@ -2,7 +2,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8">
-    <title>部门信息-日报后台管理系统</title>
+    <title>Control panel - Department</title>
     <link rel='stylesheet' href='/css/bootstrap.min.css' />
     <link rel='stylesheet' href='/css/adminStyle.css' />
     <link rel='stylesheet' href='/css/pepper-grinder/jquery-ui-1.10.3.custom.min.css' />
@@ -20,21 +20,21 @@
         <li ><a href="/logout">Logout</a></li>
     </ul>
 </header>
-<div id="dialog-confirm" title="删除部门" style="display:none">
-    <p>确认要删除该部门吗？</p>
+<div id="dialog-confirm" title="Delete department" style="display:none">
+    <p>Are you sure to delete the department？</p>
 </div>
 <section id="department" class="container">
     <div id="newDepartment" data-bind="css:{update: updateDepartment()}">
-        <div class="title"  data-bind="visible: !updateDepartment()"><i class="icon-book"></i><h2>创建新部门</h2> </div>
-        <div class="title"  data-bind="visible: updateDepartment()"><i class=" icon-edit"></i><h2>编辑部门</h2> </div>
+        <div class="title"  data-bind="visible: !updateDepartment()"><i class="icon-book"></i><h2>New department</h2> </div>
+        <div class="title"  data-bind="visible: updateDepartment()"><i class=" icon-edit"></i><h2>Edit department</h2> </div>
         <div data-bind="visible: !updateDepartment()">
-        <label for="departmentName">部门名称:<span data-bind="css:{errorTip: !validDepartmentName()}, visible: !validDepartmentName()">不能为空</span></label>
+        <label for="departmentName">Department name:<!--<span data-bind="css:{errorTip: !validDepartmentName()}, visible: !validDepartmentName()">不能为空</span>--></label>
         <input type="text" required="required" id="departmentName" data-bind="value:departmentName, valueUpdate:'keyup'"/></div>
         <div data-bind="visible: updateDepartment()">
-            <label for="updateDepartmentName">部门名称:<span data-bind="css:{errorTip: !validUpdateDepartmentName()}, visible: !validUpdateDepartmentName()">不能为空</span></label>
+            <label for="updateDepartmentName">Department name:<!--<span data-bind="css:{errorTip: !validUpdateDepartmentName()}, visible: !validUpdateDepartmentName()">不能为空</span>--></label>
             <input type="text" required="required" id="updateDepartmentName" data-bind="value:updateDepartmentName, valueUpdate:'keyup'"/></div>
 
-        <label for="parentDepartment">上级部门:</label>
+        <label for="parentDepartment">Superior department:</label>
         <select id="parentDepartment"
                 data-bind="options: departments, optionsText:'name',value:selectedParentDepartment, optionsCaption: 'NULL'"></select>
         <div data-bind="visible: !updateDepartment()"><input id="createBtn" type="button" value="Create" class="btn btn-primary"

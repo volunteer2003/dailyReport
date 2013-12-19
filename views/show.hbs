@@ -28,8 +28,8 @@
         {{/if}}
     </ul>
 </header>
-<div id="dialog-confirm" title="删除日报" style="display:none">
-    <p>确认要删除该日报吗？</p>
+<div id="dialog-confirm" title="Delete report" style="display:none">
+    <p>Are you sure to delete the report?</p>
 </div>
 <section class="container">
     <article id="reportList" >
@@ -38,6 +38,7 @@
                 <p class="date"><i class="icon-calendar"></i><span data-bind="text: date"></span></p>
                 <div class="content" data-bind="html: content"></div>
                 <!-- <p class="btn btn-link reply" data-bind="attr: {reportId: id}">reply</p> -->
+				<p class="btn btn-link delete" data-bind="attr: {reportId: id}">edit</p>
                 <p class="btn btn-link delete" data-bind="attr: {reportId: id}">delete</p>
             </li>
         </ul>

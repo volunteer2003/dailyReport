@@ -72,7 +72,7 @@
       _ref = dateStr.split("-"), year = _ref[0], months = _ref[1], date = _ref[2];
       check(year).notNull().isNumeric().len(4, 4);
       check(months).notNull().isNumeric().len(1, 2);
-      check(date).notNull().isNumeric().len(1, 2);
+      //check(date).notNull().isNumeric().len(1, 2);
       return reportModel.createReport(userId, content, dateStr, function(response) {
         return res.send(response);
       });
