@@ -56,7 +56,7 @@
         }
       }
       if (!userId) {
-        return res.send(new Response(1, "用户名:" + userName + "不存在", 0));
+        return res.send(new Response(1, "User not exist!", 0));
       }
       hasThisUser = false;
       for (key in users) {
@@ -69,7 +69,7 @@
         }
       }
       if (!hasThisUser) {
-        return res.send(new Response(1, "密码错误", 0));
+        return res.send(new Response(1, "Invalid PASSCODE!", 0));
       }
       req.session.userId = userId;
       return userModel.getAdminIds(function(response) {

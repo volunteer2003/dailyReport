@@ -10,12 +10,12 @@
     self.validUserName = ko.computed(function() {
       var un;
       un = $.trim(self.userName());
-      return un.length >= 2 && un.length <= 25;
+      return un.length >= 1 && un.length <= 25;
     });
     self.validPassword = ko.computed(function() {
       var pw;
       pw = $.trim(self.password());
-      return pw.length >= 7 && pw.length <= 25;
+      return pw.length >= 1 && pw.length <= 25;
     });
     self.errorTip = ko.observable('');
     self.getErrorTip = function() {
