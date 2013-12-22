@@ -54,7 +54,7 @@
       client = null;
     }
     if (message == null) {
-      message = '数据库错误';
+      message = 'Database error!';
     }
     if (client) {
       client.quit();

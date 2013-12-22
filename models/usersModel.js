@@ -132,7 +132,7 @@
         if (err) {
           return utils.showDBError(callback, client);
         }
-        newUsers = getUsersWithoutPassword(reply);
+        newUsers = getUsersWithoutPassword(reply); 
         for (key in newUsers) {
           value = newUsers[key];
           childOfKey = key.split(":");

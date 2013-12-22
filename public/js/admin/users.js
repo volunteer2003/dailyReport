@@ -8,8 +8,8 @@
     var self;
     self = this;
     self.userName = ko.observable('');
-    self.password = ko.observable('123456');
-    self.repassword = ko.observable('123456');
+    self.password = ko.observable('');
+    self.repassword = ko.observable('');
     self.validUserName = ko.computed(function() {
       var un;
       un = $.trim(self.userName());

@@ -48,12 +48,14 @@ app.use(express.session({ store: new RedisStore({host:sessiondbconfig.host, port
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(function (err, req, res, next) {
-  var meta = '[' + new Date() + '] ' + req.url + '\n';
-  errorLog.write(meta + err.stack + '\n');
-  next();
-});
 
+app.configure('production', function(){
+	app.use(function (err, req, res, next) {
+		var meta = '[' + new Date() + '] ' + req.url + '\n';
+		errorLog.write(meta + err.stack + '\n');
+		next();
+});
+});
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());

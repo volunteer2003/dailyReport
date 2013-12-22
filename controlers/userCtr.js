@@ -47,6 +47,7 @@
       }
       users = response.data;
       userId = null;
+	  // check the user is exist or not
       for (key in users) {
         value = users[key];
         _ref = key.split(":"), id = _ref[0], property = _ref[1];
@@ -58,6 +59,7 @@
       if (!userId) {
         return res.send(new Response(1, "User not exist!", 0));
       }
+	  // check the password
       hasThisUser = false;
       for (key in users) {
         value = users[key];
@@ -68,6 +70,7 @@
           break;
         }
       }
+	  // check the admin flag
       if (!hasThisUser) {
         return res.send(new Response(1, "Invalid PASSCODE!", 0));
       }
@@ -85,7 +88,17 @@
             break;
           }
         }
-        return res.send(new Response(1, "success", 1));
+		
+		
+		
+		return userModel.hasSubordinate(userId, function(result) {
+			if (result) {
+				// OK, the user is a manager, the first page should be the 'showsubordinate' page
+				return res.send(new Response(1, "success", 2));
+			}
+			// the user is a staff, the first page should be the 'write' page
+			return res.send(new Response(1, "success", 1));
+		});
       });
     });
   };
@@ -168,7 +181,7 @@
     superiorId = req.body.superiorId;
     try {
       check(userName, "字符长度为2-25").len(2, 25);
-      check(password, "字符长度为7-25").len(7, 25);
+      check(password, "字符长度为2-25").len(2, 25);
     } catch (error) {
       errorMessage = error.message;
       return res.send(new Response(0, errorMessage));
@@ -207,7 +220,7 @@
     departmentId = req.body.departmentId;
     superiorId = req.body.superiorId;
     try {
-      check(userName, "字符长度为6-25").len(6, 25);
+      check(userName, "字符长度为2-25").len(2, 25);
       hashedPassword = null;
       if (password) {
         hashedPassword = crypto.createHash("sha1").update(password).digest('hex');

@@ -21,6 +21,7 @@
     app.post('/password', user.changePassword);
     app.post('/delete', report["delete"]);
     app.get('/show', report.showIndex);
+	//app.get('/show_all', report.showAllIndex);
     app.post('/getsubordinateuseranddepartment', report.getSubordinateUserAndDepartment);
     app.get('/showsubordinate', report.showsubordinateIndex);
     app.post('/getreports', report.getReports);
