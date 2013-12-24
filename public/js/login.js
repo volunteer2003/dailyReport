@@ -33,6 +33,7 @@
     });
     self.submit = function() {
       var data, result;
+	  
       self.showErrorTip(true);
       if (self.valid()) {
         data = {
@@ -47,15 +48,13 @@
             return self.errorTip(response.message);
           }
 		  
-		  console.log('User login:' + self.userName);
+		  console.log('User login:' + self.userName());
 		  
 		  if (response.data === 2) {		
-
             return location.href = "/showsubordinate";
           }
-		  
-          if (response.data === 1) {		
-
+          
+		  if (response.data === 1) {		
             return location.href = "/write";
           }
         });
@@ -64,7 +63,7 @@
           return result = "用户名长度为2-25个字符";
         }
         if (!self.validPassword()) {
-          return result = "密码长度为7-25个字符";
+          return result = "密码长度为2-25个字符";
         }
       }
     };

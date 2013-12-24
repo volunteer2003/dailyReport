@@ -4,6 +4,7 @@
 
   validator = new Validator();
 
+  // this 'content' should be assign to this week's report or report template if the report not exists
   editor = UE.getEditor('content');
 
   WriteReportViewModel = function() {
@@ -29,7 +30,7 @@
 
   init = function() {
     var dateStr, getDateStr, reportvm;
-    $("#dateTxt").datepicker();
+	$("#dateTxt").datepicker();//enable the calendar when click in the input box
     $("#dateTxt").datepicker("option", "dateFormat", "yy-mm-dd to yy-mm-dd");
     reportvm = new WriteReportViewModel();
     ko.applyBindings(reportvm);
@@ -37,6 +38,8 @@
       var month, today, year, day;
 	  var month_first, day_first, year_first; // for calc the first day and the last day of the week
 	  var month_last, day_last, year_last;
+	  
+	  date = new Date();
       day = new Date();
 	  day_new = new Date();
       year = date.getFullYear();
@@ -60,22 +63,23 @@
 	  //return "" + year_last + "-" + month_last + "-" + day_last;
 	  
 	  return "" + year_first + "-" + month_first + "-" + day_first + " to " + year_last + "-" + month_last + "-" + day_last;
-	  
-	  
-      
+	   
     };
     dateStr = getDateStr(new Date());
+	console.log('Got the report date:[' + dateStr +']');
     reportvm.dateTxt(dateStr);
+
     return $("#reportSubmitBtn").click(function(event) {
       var data;
       if (!reportvm.validDateTxt()) {
         return;
       }
-      dateStr = getDateStr($("#dateTxt").datepicker("getDate"));
+      dateStr = getDateStr($("#dateTxt").datepicker());
       data = {
         date: dateStr,
         content: editor.getContent()
       };
+	  console.log('Got the report content:[' + editor.getContent() +']');
       return ReportModel.createReport(data, function(response) {
         if (response.state === 0) {
           return;
