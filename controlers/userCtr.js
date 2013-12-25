@@ -89,8 +89,6 @@
           }
         }
 		
-		
-		
 		return userModel.hasSubordinate(userId, function(result) {
 			if (result) {
 				// OK, the user is a manager, the first page should be the 'showsubordinate' page

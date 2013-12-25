@@ -49,6 +49,7 @@
 	console.log('isLoginUser(req):' + this.isLoginUser(req));
 	//console.log('req.session.isAdmin:' + req.session.isAdmin;
     return this.isLoginUser(req) && req.session.isAdmin === 1;
+	//return true;
   }; 
 
   exports.showDBError = function(callback, client, message) {

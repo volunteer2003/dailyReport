@@ -53,19 +53,42 @@
       if (err) {
         return utils.showDBError(callback, client);
       }
-      userId = "" + nextUserId;
-      return client.hmset("users", "" + userId + ":user_name", userName, "" + userId + ":password", password, function(err, reply) {
-        return client.sadd("administrators", userId, function(err, reply) {
-          if (err) {
-            return utils.showDBError(callback, client);
-          }
-          client.quit();
-          return callback(new Response(1, "success", reply));
-        });
+     
+	  return client.hgetall("users", function(err, reply) {
+        var users;
+        if (err) {
+          return utils.showDBError(callback, client);
+        }
+        // get all the user info
+        users = getUsersWithoutPassword(reply);
+		for (key in users) {
+			value = users[key];
+			_ref = key.split(":"), id = _ref[0], property = _ref[1];
+			if (property === "user_name" && value === userName) {
+				// find the user[admin] id
+				result = true;
+				userId = id;
+				// delete the exist admin by the userId
+				client.hdel("users", "" + userId + ":user_name", "" + userId + ":password");
+				break;
+			}
+		}		
+		
+		// begin to add the defaultAdmin
+		userId = "" + nextUserId;
+        return client.hmset("users", "" + userId + ":user_name", userName, "" + userId + ":password", password, function(err, reply) {
+			return client.sadd("administrators", userId, function(err, reply) {
+				if (err) {
+					return utils.showDBError(callback, client);
+				}
+				client.quit();
+				return callback(new Response(1, "success", reply));
+			});
+		});
       });
-    });
+	});
   };
-
+ 
   exports.updateUser = function(userId, userName, password, departmentId, superiorId, callback) {
     var client, replycallback;
     client = utils.createClient();
@@ -123,6 +146,7 @@
   exports.removeUser = function(userId, callback) {
     var client;
     client = utils.createClient();
+	console.log('removeUser:' + userId);
     return client.hdel("users", "" + userId + ":user_name", "" + userId + ":password", "" + userId + ":department_id", "" + userId + ":superior_id", function(err, reply) {
       if (err) {
         return utils.showDBError(callback, client);
@@ -132,6 +156,7 @@
         if (err) {
           return utils.showDBError(callback, client);
         }
+
         newUsers = getUsersWithoutPassword(reply); 
         for (key in newUsers) {
           value = newUsers[key];

@@ -49,7 +49,7 @@
           }
 		  
 		  console.log('User login:' + self.userName());
-		  
+		  console.log('response.data:' + response.data);
 		  if (response.data === 2) {		
             return location.href = "/showsubordinate";
           }

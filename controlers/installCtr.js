@@ -7,10 +7,11 @@
   userModel = require('../models/usersModel');
 
   exports.install = function(req, res) {
-    var hashedPassword, password, userName;
+    var hashedPassword, password, userName, userId;
     userName = "admin";
     password = "1234567";
     hashedPassword = crypto.createHash("sha1").update(password).digest('hex');
+	
     return userModel.createDefaultAdmin(userName, hashedPassword, function(response) {
       return res.render("install");
     });
