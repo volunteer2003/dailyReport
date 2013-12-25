@@ -17,10 +17,19 @@
         return utils.showDBError(callback, client);
       }
       score = getDateNumber(dateStr);
+	  //console.log('getDateNumber dateStr:' + dateStr);
+	  console.log('getDateNumber score:' + score);
       return client.zadd("userid:" + userId + ":reportIds", score, reportId, function(err, reply) {
         if (err) {
           return utils.showDBError(callback, client);
         }
+		
+		//console.log('getDateNumber userId:' + userId);
+		//console.log('getDateNumber reportId:' + reportId);
+		//console.log('getDateNumber dateStr:' + dateStr);
+		//console.log('getDateNumber reportId:' + reportId);
+		//console.log('getDateNumber content:' + content);
+		
         return client.hmset("userid:" + userId + ":reports", "" + reportId + ":date", dateStr, "" + reportId + ":content", content, function(err, reply) {
           if (err) {
             return utils.showDBError(callback, client);

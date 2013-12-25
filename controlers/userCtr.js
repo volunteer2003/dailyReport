@@ -53,6 +53,7 @@
         _ref = key.split(":"), id = _ref[0], property = _ref[1];
         if (property === "user_name" && value === userName) {
           userId = id;
+		  console.log('exports.login userId :' + userId);
           break;
         }
       }

@@ -30,7 +30,7 @@
 
   init = function() {
     var dateStr, getDateStr, reportvm;
-	$("#dateTxt").datepicker();//enable the calendar when click in the input box
+	//$("#dateTxt").datepicker();//enable the calendar when click in the input box
     $("#dateTxt").datepicker("option", "dateFormat", "yy-mm-dd to yy-mm-dd");
     reportvm = new WriteReportViewModel();
     ko.applyBindings(reportvm);

@@ -77,7 +77,7 @@
         return res.send(response);
       });
     } catch (error) {
-      return res.send(new Response(0, "日期格式不正确或者内容为空"));
+      return res.send(new Response(0, "wrong date formate！"));
     }
   };
 
