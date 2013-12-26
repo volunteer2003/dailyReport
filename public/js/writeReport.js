@@ -6,9 +6,11 @@
 
   // this 'content' should be assign to this week's report or report template if the report not exists
   editor = UE.getEditor('content');   // the content is the 
-
+  var userId = ko.observable(null);
+  console.log('userId:' + userId);
   editor.ready(function() { // loading the editor
-    editor.setContent('内容'); // setContent when loading is over
+	
+    editor.setContent('XXX'); // setContent when loading is over
   });
   
   WriteReportViewModel = function() {
@@ -50,8 +52,7 @@
       month = date.getMonth() + 1;
 	  day = date.getDate();
       
-	  //return "" + year + "-" + month + "-" + day;
-	  
+	  //return "" + year + "-" + month + "-" + day;  
 	  // calc the first day of the week
 	  day_new.setDate(date.getDate() - date.getDay() + 1);
 	  year_first = day_new.getFullYear();

@@ -64,60 +64,7 @@
     }
     return callback(new Response(0, message));
   };
-  
-  exports.hasReport = function(req) {
-	var _ref, userId;
-	_ref = req.session;
-	userId = _ref.userId;
-	console.log('hasReport userId:' + userId);
-	
-	// get this week's title of the report
-	dateStr = getDateStr(new Date());
-	console.log('hasReport dateStr:' + dateStr);
-	
-	var client;
-    client = this.createClient();
-	
-	
-	
-	return client.hgetall("userid:" + userId + ":reports", function(err, reply) {
-        var users;
-        if (err) {
-		  console.log('hasReport: DB error!');
-          return -1;
-        }
-		console.log('hasReport reply:' + reply);
-		
-		// parse the reports info
-		var childOfKey, key, value;
-		for (key in reply) {
-		  value = reply[key];
-          childOfKey = key.split(":");
-		  console.log('0-hasReport value:' + childOfKey[0]);
-  		  console.log('1-hasReport value:' + childOfKey[1]);
-		  console.log('2-hasReport value:' + childOfKey[2]);
-		  console.log('3-hasReport value:' + childOfKey[3]);
-		  console.log('4-hasReport value:' + childOfKey[4]);
-		  
-          if (childOfKey[1] == "date") {
-            console.log('hasReport value:' + value);
-			if (value == dateStr) {
-				console.log('hasReport return:' + true);
-				return true;
-			}
-          }
-		  
-        }
-		return false;
-        // get all the user info
-        //users = getUsersWithoutPassword(reply);
-	});
-	
-	//check the report is exists or not
-	
-
-  };
-  
+    
   exports.createClient = function() {
     var client;
     client = redis.createClient(dbconfig.port, dbconfig.host);

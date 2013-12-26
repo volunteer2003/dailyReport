@@ -110,6 +110,7 @@
     data["hasSubordinate"] = false;
     data["isLoginUser"] = utils.isLoginUser(req);
     data["isAdmin"] = utils.isAdmin(req);
+	data["userId"] = userId;
     return userModel.hasSubordinate(userId, function(result) {
       if (result) {
         data["hasSubordinate"] = true;
