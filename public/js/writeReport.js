@@ -5,8 +5,12 @@
   validator = new Validator();
 
   // this 'content' should be assign to this week's report or report template if the report not exists
-  editor = UE.getEditor('content');
+  editor = UE.getEditor('content');   // the content is the 
 
+  editor.ready(function() { // loading the editor
+    editor.setContent('内容'); // setContent when loading is over
+  });
+  
   WriteReportViewModel = function() {
     var self;
     self = this;
@@ -30,8 +34,8 @@
 
   init = function() {
     var dateStr, getDateStr, reportvm;
-	//$("#dateTxt").datepicker();//enable the calendar when click in the input box
-    $("#dateTxt").datepicker("option", "dateFormat", "yy-mm-dd to yy-mm-dd");
+	//$("#dateTxt").datepicker();       //enable the calendar when click in the input box
+    //$("#dateTxt").datepicker("option", "dateFormat", "yy-mm-dd to yy-mm-dd");
     reportvm = new WriteReportViewModel();
     ko.applyBindings(reportvm);
     getDateStr = function(date) {
@@ -67,13 +71,17 @@
     };
     dateStr = getDateStr(new Date());
 	console.log('Got the report date:[' + dateStr +']');
+	
     reportvm.dateTxt(dateStr);
-
+		
+	//editor.setContent('content');
+	
     return $("#reportSubmitBtn").click(function(event) {
       var data;
       if (!reportvm.validDateTxt()) {
         return;
       }
+	  console.log('reportSubmitBtn click!');
       dateStr = getDateStr($("#dateTxt").datepicker());
       data = {
         date: dateStr,
@@ -82,6 +90,7 @@
 	  console.log('Got the report content:[' + editor.getContent() +']');
       return ReportModel.createReport(data, function(response) {
         if (response.state === 0) {
+		  console.log('The report content is empty');
           return;
         }
         return window.location.href = "/show";

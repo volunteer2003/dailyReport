@@ -278,7 +278,7 @@
         height: 160,
         modal: true,
         buttons: {
-          "删除": function() {
+          "Delete": function() {
             deleteUser(userId);
             return $(this).dialog("close");
           },

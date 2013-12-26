@@ -114,7 +114,14 @@
       if (result) {
         data["hasSubordinate"] = true;
       }
-      return res.render(pageTitle, data);
+	  
+	  // deal with the init report by check the report exists or not
+      return reportModel.hasReport(req, function(result) {
+	    if (result) {
+	      data["hasReport"] = true;
+        }
+        return res.render(pageTitle, data);
+	  });
     });
   };
 
@@ -157,7 +164,7 @@
       }
     });
   };
-
+  
   exports.getReports = function(req, res) {
     var numOfPage, page, userId;
     if (!utils.authenticateUser(req, res)) {

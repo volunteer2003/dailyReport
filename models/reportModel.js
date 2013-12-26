@@ -24,12 +24,6 @@
           return utils.showDBError(callback, client);
         }
 		
-		//console.log('getDateNumber userId:' + userId);
-		//console.log('getDateNumber reportId:' + reportId);
-		//console.log('getDateNumber dateStr:' + dateStr);
-		//console.log('getDateNumber reportId:' + reportId);
-		//console.log('getDateNumber content:' + content);
-		
         return client.hmset("userid:" + userId + ":reports", "" + reportId + ":date", dateStr, "" + reportId + ":content", content, function(err, reply) {
           if (err) {
             return utils.showDBError(callback, client);
@@ -53,6 +47,48 @@
     return parseInt("" + year + months + date);
   };
 
+  exports.hasReport = function(req, callback) {
+	var _ref, userId;
+	_ref = req.session;
+	userId = _ref.userId;
+	console.log('hasReport userId:' + userId);
+	
+	// get this week's title of the report
+	dateStr = getDateStr(new Date());
+	console.log('hasReport dateStr:' + dateStr);
+	
+	var client;
+    client = utils.createClient();
+
+	return client.hgetall("userid:" + userId + ":reports", function(err, reply) {
+        var users;
+		if (err) {
+          return utils.showDBError(callback, client);
+        }
+		console.log('hasReport reply:' + reply);
+		
+		var result = false;
+		// parse the reports info
+		var childOfKey, key, value;
+		for (key in reply) {
+		  value = reply[key];
+          childOfKey = key.split(":");
+		 
+          if (childOfKey[1] == "date") {
+            console.log('hasReport value:' + value);
+			if (value == dateStr) {
+				console.log('hasReport return:' + true);
+				result = true;
+				return callback(result);
+			}
+          }		  
+        }
+		result = false;
+		return callback(result);
+	});
+  };  
+  
+  
   exports.getReports = function(userId, page, numOfPage, callback) {
     var client, end, start;
     client = utils.createClient();

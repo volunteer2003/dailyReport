@@ -38,11 +38,14 @@
             <!-<input readonly id="dateTxt" type="text" required="required"-->
 			<input readonly id="dateTxt" type="text" required="required"
                    data-bind="value:dateTxt, valueUpdate:'keyup'"/></div>
-        <div>
+          <div>
             <label for="content">Content:</label>
             <textarea id="content" rows="6" cols="30"  required="required"
-                      placeholder="Here is your daily report..."></textarea></div>
-
+                      placeholder="Here is your daily report...">
+					  <!--{{#if hasReport}} <b>1231</b> {{/if}}-->
+			</textarea>			
+		  </div>
+			
         <div>
 			<input id="reportSubmitBtn" type="button" value="Submit" class="btn btn-primary"
                     data-bind="enable:validDateTxt()"/></div>
