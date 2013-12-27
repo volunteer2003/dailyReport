@@ -121,7 +121,14 @@
 	    if (result) {
 	      data["hasReport"] = true;
         }
-        return res.render(pageTitle, data);
+		return reportModel.getReportContent(req, function(result) {
+			console.log('reportModel.getReportContent result:' + result);
+			if (result) {
+				data["content"] = result;
+			}
+			return res.render(pageTitle, data);
+		});
+        
 	  });
     });
   };

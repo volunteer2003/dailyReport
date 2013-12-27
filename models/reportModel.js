@@ -35,6 +35,33 @@
     });
   };
 
+  createReport = function(userId, content, dateStr) {
+    var client;
+    client = utils.createClient();
+    return client.incr("next_report_id", function(err, reportId) {
+      var score;
+      if (err) {
+        return utils.showDBError(callback, client);
+      }
+      score = getDateNumber(dateStr);
+	  //console.log('getDateNumber dateStr:' + dateStr);
+	  console.log('getDateNumber score:' + score);
+      return client.zadd("userid:" + userId + ":reportIds", score, reportId, function(err, reply) {
+        if (err) {
+          return utils.showDBError(callback, client);
+        }
+		
+        return client.hmset("userid:" + userId + ":reports", "" + reportId + ":date", dateStr, "" + reportId + ":content", content, function(err, reply) {
+          if (err) {
+            return utils.showDBError(callback, client);
+          }
+          client.quit();
+          return callback(new Response(1, 'success', reply));
+        });
+      });
+    });
+  };
+  
   getDateNumber = function(dateStr) {
     var date, months, year, _ref;
     _ref = dateStr.split("-"), year = _ref[0], months = _ref[1], date = _ref[2];
@@ -79,6 +106,7 @@
 			if (value == dateStr) {
 				console.log('hasReport return:' + true);
 				result = true;
+				client.quit()
 				return callback(result);
 			}
           }		  
@@ -88,7 +116,72 @@
 	});
   };  
   
-  
+  exports.getReportContent = function(req, callback) {
+	var _ref, userId;
+	var content_template = "<H1>ABC</H1>";
+	_ref = req.session;
+	userId = _ref.userId;
+	// get this week's title of the report
+	dateStr = getDateStr(new Date());	
+	var client;
+    client = utils.createClient();
+
+	return client.hgetall("userid:" + userId + ":reports", function(err, reply) {
+        var users;
+		if (err) {
+          return utils.showDBError(callback, client);
+        }
+		console.log('getReportContent reply:' + reply);
+		
+		// if the report not exists, should create it by the report template
+		if (!reply) {
+			var content = content_template;
+			var result = createReport(userId, content, dateStr);
+			if (!result) {
+				return result;
+			}
+			return content;
+		}
+		
+		// if the report exists, should get the content and return it
+		var result = false;
+		var childOfKey, key, value;
+		for (key in reply) {
+		  value = reply[key];
+          childOfKey = key.split(":");
+			
+          if (childOfKey[1] == "date") {
+			if (value == dateStr) {
+			    var reportId = childOfKey[0];
+				
+				return client.hgetall("userid:" + userId + ":reports", function(err, reply) {
+					if (err) {
+						return utils.showDBError(callback, client);
+					}
+
+					for (key in reply) {
+						value = reply[key];
+						childOfKey = key.split(":");
+						if (childOfKey[1] == "content") {
+							if (childOfKey[0] == reportId) {
+								return callback(value);
+							}	
+						}
+					}
+					
+					var content = content_template;
+					return createReport(userId, content, dateStr, function(response) {	
+						return callback(content);
+					});					
+				});
+			}
+          }		  
+        }
+		result = false;
+		return callback(result);
+	});
+  };  
+   
   exports.getReports = function(userId, page, numOfPage, callback) {
     var client, end, start;
     client = utils.createClient();

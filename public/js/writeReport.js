@@ -6,11 +6,8 @@
 
   // this 'content' should be assign to this week's report or report template if the report not exists
   editor = UE.getEditor('content');   // the content is the 
-  var userId = ko.observable(null);
-  console.log('userId:' + userId);
   editor.ready(function() { // loading the editor
-	
-    editor.setContent('XXX'); // setContent when loading is over
+    //editor.setContent('XXX'); // setContent when loading is over
   });
   
   WriteReportViewModel = function() {
