@@ -51,11 +51,11 @@
       
 	  //return "" + year + "-" + month + "-" + day;  
 	  // calc the first day of the week
-	  day_new.setDate(date.getDate() - date.getDay() + 1);
+	  day_new.setDate(date.getDate() - date.getDay() + 4);
 	  year_first = day_new.getFullYear();
       month_first = day_new.getMonth() + 1;
 	  day_first = day_new.getDate();
-	  //return "" + year_first + "-" + month_first + "-" + day_first;
+	  return "" + year_first + "-" + month_first + "-" + day_first;
 	  
 	  // calc the last day of the week
 	  day_new.setDate(day_new.getDate() + 6);

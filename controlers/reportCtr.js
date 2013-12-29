@@ -25,9 +25,19 @@
     if (!utils.authenticateUser(req, res)) {
       return;
     }
+
     return showPage(req, res, "write");
   };
 
+  exports.edit = function(req, res) {
+    if (!utils.authenticateUser(req, res)) {
+      return;
+    }
+	console.log('123456');
+	//return res.redirect("/write");
+    return showPage(req, res, "write");
+  };  
+  
   exports.settingMobile = function(req, res) {
     if (!utils.authenticateUser(req, res)) {
       return;
@@ -80,6 +90,29 @@
       return res.send(new Response(0, "wrong date formate！"));
     }
   };
+  
+  exports.update = function(req, res) {
+    var content, date, dateStr, months, userId, year, _ref;
+    if (!utils.authenticateUser(req, res)) {
+      return;
+    }
+    userId = req.session.userId;
+    dateStr = req.body.date;
+    content = req.body.content;
+    try {
+      check(dateStr).notEmpty();
+      check(content).notEmpty();
+      _ref = dateStr.split("-"), year = _ref[0], months = _ref[1], date = _ref[2];
+      check(year).notNull().isNumeric().len(4, 4);
+      check(months).notNull().isNumeric().len(1, 2);
+      //check(date).notNull().isNumeric().len(1, 2);
+      return reportModel.updateReport(userId, content, dateStr, function(response) {
+        return res.send(response);
+      });
+    } catch (error) {
+      return res.send(new Response(0, "wrong date formate！"));
+    }
+  };  
 
   exports.showIndex = function(req, res) {
     if (!utils.authenticateUser(req, res)) {
@@ -97,7 +130,30 @@
       layout: "mobile/layout.hbs"
     });
   };
-
+ 
+	getCurrentDateStr = function(date) {
+      var month, today, year, day;
+	  var month_first, day_first, year_first; // for calc the first day and the last day of the week
+	  var month_last, day_last, year_last;
+	  
+	  date = new Date();
+      day = new Date();
+	  day_new = new Date();
+      year = date.getFullYear();
+      month = date.getMonth() + 1;
+	  day = date.getDate();
+      
+	  //return "" + year + "-" + month + "-" + day;  
+	  // calc the first day of the week
+	  day_new.setDate(date.getDate() - date.getDay() + 4);
+	  year_first = day_new.getFullYear();
+      month_first = day_new.getMonth() + 1;
+	  day_first = day_new.getDate();
+	  return "" + year_first + "-" + month_first + "-" + day_first;
+	  
+    };
+    dateStr = getCurrentDateStr(new Date()); 
+ 
   showPage = function(req, res, pageTitle, data) {
     var userId;
     if (data == null) {
@@ -111,6 +167,14 @@
     data["isLoginUser"] = utils.isLoginUser(req);
     data["isAdmin"] = utils.isAdmin(req);
 	data["userId"] = userId;
+	data["dateStr"] = req.body.date;
+	
+	if (!data["dateStr"]) {
+		data["dateStr"] = dateStr;
+	}
+	
+	
+	console.log('reportModel.getReportContent dateStr:' + data["dateStr"]);
     return userModel.hasSubordinate(userId, function(result) {
       if (result) {
         data["hasSubordinate"] = true;
@@ -121,6 +185,7 @@
 	    if (result) {
 	      data["hasReport"] = true;
         }
+		
 		return reportModel.getReportContent(req, function(result) {
 			console.log('reportModel.getReportContent result:' + result);
 			if (result) {

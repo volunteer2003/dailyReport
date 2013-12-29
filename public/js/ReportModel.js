@@ -17,6 +17,13 @@
         return callback(response);
       }, "json");
     };
+	
+	ReportModel.editReport = function(data, callback) {
+      return $.post("/edit", data, function(response) {
+		//return window.location.href = "/write";
+        return callback(response);
+      }, "json");
+    };
 
     ReportModel.getReportNum = function(userId, callback) {
       return $.post("/getreportnum", {

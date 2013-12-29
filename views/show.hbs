@@ -28,8 +28,21 @@
         {{/if}}
     </ul>
 </header>
-<div id="dialog-confirm" title="Delete report" style="display:none">
+<div id="dialog-confirm" title="Edit report" style="display:none">
     <p>Are you sure to delete the report?</p>
+	<label for="dateTxt">Date:</label>
+	<input readonly id="dateTxt" type="text" required="required"
+        data-bind="value:dateTxt, valueUpdate:'keyup'"/>
+				
+	<label for="content">Content:</label>
+    <textarea id="content" rows="6" cols="30"  required="required"
+        placeholder="Here is your daily report...">
+	    <!--{{#if hasReport}}<b>1231</b> {{/if}}-->
+		
+	</textarea>	
+		
+		
+	
 </div>
 <section class="container">
     <article id="reportList" >
@@ -38,7 +51,7 @@
                 <p class="date"><i class="icon-calendar"></i><span data-bind="text: date"></span></p>
                 <div class="content" data-bind="html: content"></div>
                 <!-- <p class="btn btn-link reply" data-bind="attr: {reportId: id}">reply</p> -->
-				<p class="btn btn-link delete" data-bind="attr: {reportId: id}">edit</p>
+				<p class="btn btn-link delete" data-bind="attr: {dateStr: date, reportId: id, content: content}">edit</p>
             </li>
         </ul>
         <div class="pagination" data-bind="if: pageNum() > 1">
@@ -55,5 +68,8 @@
 <script type="text/javascript" src='/js/ReportModel.js'></script>
 <script type="text/javascript" src='/js/reportBase.js'></script>
 <script type="text/javascript" src='/js/showReports.js'></script>
+
+
+
 </body>
 </html>

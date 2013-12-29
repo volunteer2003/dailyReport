@@ -10,7 +10,8 @@
     return $("#dialog-confirm").dialog({
       dialogClass: "no-close",
       resizable: false,
-      height: 160,
+      height: 560,
+	  width: 800,
       modal: true,
       buttons: {
         "Delete": function() {
@@ -25,9 +26,36 @@
   };
 
   $("#reportList").on("click", "p.delete", function() {
-    var reportId;
+    var dateStr,reportId,content;
+	dateStr = $(this).attr("dateStr");
     reportId = $(this).attr("reportId");
-    return confirm(reportId);
+	content = $(this).attr("content");
+	console.log('Get dateStr:' + dateStr);
+    console.log('Get reportId:' + reportId);
+	console.log('Get content:' + content);
+	
+	data = {
+        date: dateStr,
+		reportId: reportId,
+        content: content
+    };
+	
+	return ReportModel.editReport(data, function(response) {
+		window.location.href = "/write";
+		return callback(response);
+	
+	});
+	//return window.location.href = "/write";
+	// post and route to a new sub, render the write page and the data
+	//return $.post("/edit", data, function(response) {
+    //    return callback(response);
+    //  }, "json");
+	  
+	  
+	  
+	//window.location.href='/write?reportId=' + reportId + '&content=' + content;
+	
+	//return confirm(reportId);
   });
 
   deleteReport = function(reportId) {
