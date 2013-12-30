@@ -18,7 +18,8 @@
     if (!utils.authenticateUser(req, res)) {
       return;
     }
-    return res.redirect("/show");
+    //return res.redirect("/show");
+	return showPage(req, res, "index");
   };
 
   exports.writeIndex = function(req, res) {

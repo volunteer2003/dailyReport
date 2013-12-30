@@ -53,9 +53,9 @@
 	  
 	  
 	  
-	//window.location.href='/write?reportId=' + reportId + '&content=' + content;
+	window.location.href='/write?reportId=' + reportId + '&content=' + content;
 	
-	//return confirm(reportId);
+	return confirm(reportId);
   });
 
   deleteReport = function(reportId) {
