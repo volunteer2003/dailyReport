@@ -39,22 +39,7 @@
 		reportId: reportId,
         content: content
     };
-	
-	//return ReportModel.editReport(data, function(response) {
-	//	window.location.href = "/write";
-	//	return callback(response);
-	
-	//});
-	//return window.location.href = "/write";
-	// post and route to a new sub, render the write page and the data
-	//return $.post("/edit", data, function(response) {
-    //    return callback(response);
-    //  }, "json");
-	  
-	  
-	  
-	//window.location.href='/write?reportId=' + reportId + '&content=' + content;
-	
+		
 	return confirm(reportId);
   });
 

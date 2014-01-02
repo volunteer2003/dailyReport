@@ -101,6 +101,7 @@
 	  year_first = day_new.getFullYear();
       month_first = day_new.getMonth() + 1;
 	  day_first = day_new.getDate();
+	  console.log('utils-getDateStr:' + year_first + "-" + month_first + "-" + day_first);
 	  return "" + year_first + "-" + month_first + "-" + day_first;
 	  
 	  // calc the last day of the week

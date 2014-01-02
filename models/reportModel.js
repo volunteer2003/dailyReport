@@ -221,6 +221,8 @@
     if (start < 0) {
       start = 0;
     }
+	console.log('reportModel-getReports:' + userId);
+	
     end = (numOfPage * page) - 1;
     return client.zrevrange("userid:" + userId + ":reportIds", start, end, function(err, reportIds) {
       var contentArgs, dateArgs, reportId, _i, _len;
@@ -262,6 +264,188 @@
     });
   };
 
+  exports.getReportsAll = function(userId, page, numOfPage, callback) {
+    var client, end, start;
+    client = utils.createClient();
+    start = numOfPage * (page - 1);
+    if (start < 0) {
+      start = 0;
+    }
+	console.log('reportModel-getReportsAll userId:' + userId);
+	console.log('reportModel-getReportsAll page:' + page);
+	console.log('reportModel-getReportsAll numOfPage:' + numOfPage);
+	
+    end = (numOfPage * page) - 1;
+	console.log('reportModel-getReportsAll end:' + end);
+	
+	var dateStr = getDateStr(new Date());
+	
+	// init the dateStr, change the page will change the dateStr
+	if (page == '1') {
+		
+	} 
+	
+	console.log('reportModel-getReportsAll dateStr:' + dateStr);
+	
+	var response = [];
+	return getDepartmentId(userId, function(departmentId) {
+		console.log('reportModel-getReportsAll departmentId:' + departmentId);
+		return getColleagues(departmentId, function(usersIdList) {
+		  console.log('reportModel-getReportsAll userIdList:' + usersIdList);
+		  
+		  for (var x in usersIdList)
+		  {
+			var userId = usersIdList[x];
+			console.log('reportModel-getReportsAll userId:' + userId);
+			
+			var content =  getReport(userId, dateStr);
+				
+			response.push({
+                id: userId,
+                date: dateStr,
+                content: content	
+			  
+			});
+			
+          }
+		  client.quit();
+          return callback(new Response(1, 'success', response));
+		});
+	}); 
+	
+    return client.zrevrange("userid:" + userId + ":reportIds", start, end, function(err, reportIds) {
+      var contentArgs, dateArgs, reportId, _i, _len;
+      if (err) {
+        return utils.showDBError(callback, client);
+      }
+      if (reportIds && reportIds.length === 0) {
+        return callback(new Response(1, 'success', []));
+      }
+      dateArgs = ["userid:" + userId + ":reports"];
+      contentArgs = ["userid:" + userId + ":reports"];
+      for (_i = 0, _len = reportIds.length; _i < _len; _i++) {
+        reportId = reportIds[_i];
+        dateArgs.push("" + reportId + ":date");
+        contentArgs.push("" + reportId + ":content");
+      }
+      return client.hmget(dateArgs, function(err, dates) {
+        if (err) {
+          return utils.showDBError(callback, client);
+        }
+        return client.hmget(contentArgs, function(err, contents) {
+          var i, len, response, _j;
+          if (err) {
+            return utils.showDBError(callback, client);
+          }
+          len = contents.length;
+          response = [];
+          for (i = _j = 0; 0 <= len ? _j < len : _j > len; i = 0 <= len ? ++_j : --_j) {
+            response.push({
+              id: reportIds[i],
+              date: dates[i],
+              content: contents[i]
+            });
+          }
+          client.quit();
+          return callback(new Response(1, 'success', response));
+        });
+      });
+    });
+  };
+
+  
+  getReport = function(userId, dateStr) {
+  
+	console.log('getReport userId:' + userId);
+	console.log('getReport dateStr:' + dateStr);
+  
+	var client;
+    client = utils.createClient();
+	// get the departmentId first
+	return client.hgetall("userid:" + userId + ":reports", function(err, reply) {
+        var users;
+		
+		// get the report's content
+		var result = false;
+		var childOfKey, key, value;
+		for (key in reply) {
+		  value = reply[key];
+          childOfKey = key.split(":");
+			
+          if (childOfKey[1] == "date") {
+			if (value == dateStr) {
+			    var reportId = childOfKey[0];
+				
+				console.log('getReport userId:0:' + childOfKey[0]);
+				console.log('getReport userId:1:' + childOfKey[1]);
+				console.log('getReport userId:2:' + childOfKey[2]);
+				console.log('getReport userId:3:' + childOfKey[3]);
+				
+				
+
+			}
+          }		  
+        }
+		result = false;
+		return result;
+		
+	});	
+  }
+  
+  getColleagues = function(departmentId, callback) {
+	var client;
+    client = utils.createClient();
+	// get the departmentId first
+	return client.hgetall("users", function(err, reply) {
+        var users;
+		if (err) {
+          return utils.showDBError(callback, client);
+        }
+		//console.log('getDepartmentId reply:' + reply);
+		var result = false;
+		var childOfKey, key, value;
+		var usersIdList = [];
+		for (key in reply) {
+		  value = reply[key];
+          childOfKey = key.split(":");
+		  
+		  if (childOfKey[1] == 'department_id') {
+			if (value == departmentId	) {
+			  usersIdList.push(childOfKey[0]);
+			  console.log('getColleagues reply:' + childOfKey[0]);		  
+			}
+		  }	
+		}
+		return callback(usersIdList);
+	});	
+  }
+  
+  getDepartmentId = function(userId, callback) {
+	var client;
+    client = utils.createClient();
+	// get the departmentId first
+	return client.hgetall("users", function(err, reply) {
+        var users;
+		if (err) {
+          return utils.showDBError(callback, client);
+        }
+		//console.log('getDepartmentId reply:' + reply);
+		var result = false;
+		var childOfKey, key, value;
+		for (key in reply) {
+		  value = reply[key];
+          childOfKey = key.split(":");
+		  
+		  if (childOfKey[1] == 'department_id') {
+			if (childOfKey[0] == userId) {
+			  console.log('getDepartmentId reply:' + value);
+			  return callback(value);
+			}
+		  }	
+		}
+	});	
+  };
+  
   exports.getReportNum = function(userId, callback) {
     var client;
     client = utils.createClient();

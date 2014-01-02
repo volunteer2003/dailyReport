@@ -246,6 +246,11 @@
     }
     page = req.body.page;
     userId = req.body.userId;
+	
+	var userAllFlag = '0';
+	userAllFlag = req.body.userAllFlag;
+	console.log('getReports-userAllFlag:' + userAllFlag);
+		
     if (!userId) {
       userId = req.session.userId;
     }
@@ -253,9 +258,16 @@
     try {
       check(page).isNumeric().min(1);
       check(page).isNumeric().min(1);
-      return reportModel.getReports(userId, page, numOfPage, function(response) {
-        return res.send(response);
-      });
+	  
+	  if(userAllFlag == '1') {
+		return reportModel.getReportsAll(userId, page, numOfPage, function(response) {
+          return res.send(response);
+        });
+	  } else {
+		return reportModel.getReports(userId, page, numOfPage, function(response) {
+          return res.send(response);
+        });
+	  }
     } catch (error) {
       return res.send(new Response(0, "页数和每页显示条数为非负数"));
     }

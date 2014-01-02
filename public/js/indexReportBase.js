@@ -28,13 +28,13 @@
     if (userId == null) {
       userId = null;
     }
-	// to show all the reports of this week
-	userId = 'all';
+
 	console.log('getReports userId:' + userId);
     data = {
       page: reportvm.currentPage(),
       numOfPage: NUMOFPAGE,
-      userId: userId
+      userId: userId,
+	  userAllFlag: '1'	  // show the all this weeks' report in main page
     };
     return ReportModel.getReports(data, function(response) {
       if (response.state === 0) {
