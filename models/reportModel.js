@@ -18,34 +18,7 @@
       }
       score = getDateNumber(dateStr);
 	  //console.log('getDateNumber dateStr:' + dateStr);
-	  console.log('getDateNumber score:' + score);
-      return client.zadd("userid:" + userId + ":reportIds", score, reportId, function(err, reply) {
-        if (err) {
-          return utils.showDBError(callback, client);
-        }
-		
-        return client.hmset("userid:" + userId + ":reports", "" + reportId + ":date", dateStr, "" + reportId + ":content", content, function(err, reply) {
-          if (err) {
-            return utils.showDBError(callback, client);
-          }
-          client.quit();
-          return callback(new Response(1, 'success', reply));
-        });
-      });
-    });
-  };
-
-  createReport = function(userId, content, dateStr) {
-    var client;
-    client = utils.createClient();
-    return client.incr("next_report_id", function(err, reportId) {
-      var score;
-      if (err) {
-        return utils.showDBError(callback, client);
-      }
-      score = getDateNumber(dateStr);
-	  //console.log('getDateNumber dateStr:' + dateStr);
-	  console.log('getDateNumber score:' + score);
+	  console.log('reportModel-getDateNumber score:' + score);
       return client.zadd("userid:" + userId + ":reportIds", score, reportId, function(err, reply) {
         if (err) {
           return utils.showDBError(callback, client);
@@ -57,13 +30,52 @@
           }
 		  
 		  // record the report in this week's table for the show in main page
-		  return client.hset(dateStr, "" + userId + ":content", content, function(err, reply) {
-			if (err) {
+		  return getUserName(userId, function(userName){
+			return client.hset(dateStr, "" + userId + ":" + userName, content, function(err, reply) {
+			  if (err) {
 				return utils.showDBError(callback, client);
-			}
+			  }
+		       
+			  client.quit();
+              return callback(new Response(1, 'success', reply));
+		    });
+		  });
+        });
+      });
+    });
+  };
+
+  createReport = function(userId, content, dateStr, callback) {
+    var client;
+    client = utils.createClient();
+    return client.incr("next_report_id", function(err, reportId) {
+      var score;
+      if (err) {
+        return utils.showDBError(callback, client);
+      }
+      score = getDateNumber(dateStr);
+	  //console.log('getDateNumber dateStr:' + dateStr);
+	  console.log('reportModel-createReport-getDateNumber score:' + score);
+      return client.zadd("userid:" + userId + ":reportIds", score, reportId, function(err, reply) {
+        if (err) {
+          return utils.showDBError(callback, client);
+        }
+		
+        return client.hmset("userid:" + userId + ":reports", "" + reportId + ":date", dateStr, "" + reportId + ":content", content, function(err, reply) {
+          if (err) {
+            return utils.showDBError(callback, client);
+          }
 		  
-			client.quit();
-			return callback(new Response(1, 'success', reply));
+		  // record the report in this week's table for the show in main page
+		  return getUserName(userId, function(userName){
+			return client.hset(dateStr, "" + userId + ":" + userName, content, function(err, reply) {
+			  if (err) {
+				return utils.showDBError(callback, client);
+			  }
+		  
+			  client.quit();
+			  return callback(new Response(1, 'success', reply));
+		    });
 		  });
         });
       });
@@ -80,7 +92,6 @@
 		if (err) {
           return utils.showDBError(callback, client);
         }
-		console.log('getReportContent reply:' + reply);
 		
 		// update the report
 		var result = false;
@@ -94,27 +105,57 @@
 			    var reportId = childOfKey[0];
 				
 				return client.hmset("userid:" + userId + ":reports", "" + reportId + ":date", dateStr, "" + reportId + ":content", content, function(err, reply) {
-					if (err) {
-						return utils.showDBError(callback, client);
-					}
-					
+				  if (err) {
+					return utils.showDBError(callback, client);
+				  }
+				  return getDepartmentId(userId, function(departmentId) {
 					// record the report in this week's table for the show in main page
-					return client.hset(dateStr, "" + userId + ":content", content, function(err, reply) {
+					return getUserName(userId, function(userName){
+					  return client.hset(dateStr + ":" + departmentId, "" + userId + ":" + userName, content, function(err, reply) {
 						if (err) {
 							return utils.showDBError(callback, client);
 						}
-		  
+		 
 						client.quit();
 						return callback(new Response(1, 'success', reply));
-					});
+					  });
+					});	
+				  });
 				});
 			}
           }		  
         }
-		result = false;
-		return callback(result);
 	});
   };  
+  
+  getUserName = function(userId, callback) {
+	var client;
+	var userName;
+    client = utils.createClient();
+	// get the departmentId first
+	return client.hgetall("users", function(err, reply) {
+        var users;
+		if (err) {
+          return utils.showDBError(callback, client);
+        }
+		//console.log('getDepartmentId reply:' + reply);
+		var result = false;
+		var childOfKey, key, value;
+		var usersIdList = [];
+		for (key in reply) {
+		  value = reply[key];
+          childOfKey = key.split(":");
+		  
+		  if (childOfKey[1] == 'user_name') {
+			if (childOfKey[0] == userId) {
+			  userName = value;
+			  console.log('reportModel-getUserName-userName:' + userName);
+			  return callback(userName);	  
+			}
+		  }	
+		}
+	});	
+  }
   
   getDateNumber = function(dateStr) {
     var date, months, year, _ref;
@@ -132,11 +173,11 @@
 	var _ref, userId;
 	_ref = req.session;
 	userId = _ref.userId;
-	console.log('hasReport userId:' + userId);
+	console.log('reportModel-hasReport userId:' + userId);
 	
 	// get this week's title of the report
 	dateStr = getDateStr(new Date());
-	console.log('hasReport dateStr:' + dateStr);
+	console.log('reportModel-hasReport dateStr:' + dateStr);
 	
 	var client;
     client = utils.createClient();
@@ -146,7 +187,6 @@
 		if (err) {
           return utils.showDBError(callback, client);
         }
-		console.log('hasReport reply:' + reply);
 		
 		var result = false;
 		// parse the reports info
@@ -156,7 +196,7 @@
           childOfKey = key.split(":");
 		 
           if (childOfKey[1] == "date") {
-            console.log('hasReport value:' + value);
+            console.log('reportModel-hasReport value:' + value);
 			if (value == dateStr) {
 				console.log('hasReport return:' + true);
 				result = true;
@@ -166,7 +206,7 @@
           }		  
         }
 		result = false;
-		console.log('hasReport return:' + result);
+		console.log('reportModel-hasReport return:' + result);
 		return callback(result);
 	});
   };  
@@ -180,14 +220,23 @@
 	dateStr = getDateStr(new Date());	
 	var client;
     client = utils.createClient();
-	console.log('getReportContent dateStr:' + dateStr);
+	console.log('reportModel-getReportContent dateStr:' + dateStr);
 	
 	return client.hgetall("userid:" + userId + ":reports", function(err, reply) {
         var users;
 		if (err) {
           return utils.showDBError(callback, client);
         }
-		console.log('getReportContent reply:' + reply);
+		console.log('reportModel-getReportContent err:' + err);
+		console.log('reportModel-getReportContent reply:' + reply);
+		
+		if (reply == null) {
+			console.log('reportModel-getReportContent reply111111111:' + reply);
+			var content = content_template;
+			return createReport(userId, content, dateStr, function(response) {	
+				return callback(content);
+			});	
+		}
 		
 		// if the report exists, should get the content and return it
 		var result = false;
@@ -304,49 +353,43 @@
 	console.log('reportModel-getReportsAll dateStr:' + dateStr);
 	
 	var response = [];
+	var response_new = [];
 	return getDepartmentId(userId, function(departmentId) {
 		console.log('reportModel-getReportsAll departmentId:' + departmentId);
-		return getColleagues(departmentId, function(usersIdList) {
-		  console.log('reportModel-getReportsAll userIdList:' + usersIdList);
-		  return getReportsWeek(dateStr, function(response) {
-		    // need to sequence the userLists to show in the main page 
-			return callback(new Response(1, 'success', response));
-		  });
-		   
-		   
-		   
-		  for (var x in usersIdList)
-		  {
-			var userId = usersIdList[x];
-			console.log('reportModel-getReportsAll userId:1:' + userId);
-			
-			var content = 'null';
-			content =  getReport(userId, dateStr);
-			console.log('reportModel-getReportsAll dateStr:1:' + dateStr);
-			console.log('reportModel-getReportsAll content:1:' + content);
-			response.push({
-                id: userId,
-                date: dateStr,
-                content: content	
-			});
-			
-          }
-		  client.quit();
-          return callback(new Response(1, 'success', response));
+		return getReportsWeek(departmentId, dateStr, function(response) {
+		  // need to sequence the userLists to show in the main page
+		  var user = new Array;
+		
+		  for (var x in response) {
+			user[x] = response[x].name;
+		  }
 		  
-		  
-		  
+		  // re-quence the user name list
+		  var user_sequence = user.sort();
+		  for (var x in user_sequence) {
+			for (var y in response) {
+			  if (response[y].name == user_sequence[x]) {
+				response_new.push({
+                  id: response[y].id,
+                  date: response[y].date,
+                  content: response[y].content	
+			    });
+			  }
+			}			
+		  }
+		  return callback(new Response(1, 'success', response_new));
 		});
 	}); 
   };
 
   // get all the reports from the table dateStr
-  getReportsWeek = function(dateStr, callback) {
-	console.log('getReportsWeek dateStr:' + dateStr);
+  getReportsWeek = function(departmentId, dateStr, callback) {
+    console.log('reportModel-getReportsWeek-departmentId:' + departmentId);
+	console.log('reportModel-getReportsWeek-dateStr:' + dateStr);
 	var client;
     client = utils.createClient();
 
-	return client.hgetall(dateStr, function(err, reply) {
+	return client.hgetall(dateStr + ":" + departmentId, function(err, reply) {
         var users;
 		if (err) {
           return utils.showDBError(callback, client);
@@ -358,11 +401,13 @@
 		  value = reply[key];
           childOfKey = key.split(":");
 		  var userId = childOfKey[0];
+		  var userName = childOfKey[1];
 		  var content = value;
 		  
 		  response.push({
                 id: userId,
-                date: dateStr,
+				name: userName,
+                date: userName,   //date: dateStr, // change the dateStr to userName in the main page
                 content: content	
 		  });
 		}
@@ -371,8 +416,8 @@
   }
   
   getReport = function(userId, dateStr) {
-	console.log('getReport userId:' + userId);
-	console.log('getReport dateStr:' + dateStr);
+	console.log('reportModel-getReport userId:' + userId);
+	console.log('reportModel-getReport dateStr:' + dateStr);
     var content = 'null';
 	var client;
     client = utils.createClient();
@@ -391,7 +436,7 @@
 			if (value == dateStr) {
 			    var reportId = childOfKey[0];
 				
-				console.log('getReport reportId:' + reportId);
+				console.log('reportModel-getReport reportId:' + reportId);
 
 				return client.hgetall("userid:" + userId + ":reports", function(err, reply) {
 					if (err) {
@@ -421,7 +466,6 @@
     client = utils.createClient();
 	// get the departmentId first
 	return client.hgetall("users", function(err, reply) {
-        var users;
 		if (err) {
           return utils.showDBError(callback, client);
         }
@@ -435,12 +479,29 @@
 		  
 		  if (childOfKey[1] == 'department_id') {
 			if (value == departmentId	) {
-			  usersIdList.push(childOfKey[0]);
-			  console.log('getColleagues reply:' + childOfKey[0]);		  
+			  var userId = childOfKey[0];
+			  return client.hgetall("users", function(err, reply) {
+		        if (err) {
+                  return utils.showDBError(callback, client);
+                }
+
+		        var childOfKey, key, value;
+		        for (key in reply) {
+		          value = reply[key];
+                  childOfKey = key.split(":");
+		  
+		          if (childOfKey[1] == 'user_name') {
+			        if (userId == childOfKey[0]) {
+					  usersIdList.push(value);
+					  console.log('reportModel-getColleagues userName:' + value);	
+					}  
+				  }
+				}
+				return callback(usersIdList);
+              });				
 			}
 		  }	
 		}
-		return callback(usersIdList);
 	});	
   }
   
@@ -462,7 +523,7 @@
 		  
 		  if (childOfKey[1] == 'department_id') {
 			if (childOfKey[0] == userId) {
-			  console.log('getDepartmentId reply:' + value);
+			  console.log('reportModel-getDepartmentId reply:' + value);
 			  return callback(value);
 			}
 		  }	

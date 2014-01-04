@@ -146,7 +146,7 @@
   exports.removeUser = function(userId, callback) {
     var client;
     client = utils.createClient();
-	console.log('removeUser:' + userId);
+	console.log('userModel-removeUser:' + userId);
     return client.hdel("users", "" + userId + ":user_name", "" + userId + ":password", "" + userId + ":department_id", "" + userId + ":superior_id", function(err, reply) {
       if (err) {
         return utils.showDBError(callback, client);

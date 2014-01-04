@@ -45,14 +45,14 @@
     app.post('/admin/setadmin', user.setAdmin);
     app.post('/admin/deleteadmin', user.deleteAdmin);
     app.post('/admin/getadmins', user.getAdmins);
-    app.get('/m', user.indexMobile);
-    app.get('/m/login', user.loginIndexMobile);
-    app.get('/m/show', report.showIndexMobile);
-    app.get('/m/write', report.writeIndexMobile);
-    app.get('/m/showsubordinate', report.subordinateIndexMobile);
-    app.get('/m/setting', report.settingMobile);
-    app.get('/m/logout', user.logoutMobileIndex);
-    return app.get('/m/password', user.passwordMobileIndex);
+    //app.get('/m', user.indexMobile);
+    //app.get('/m/login', user.loginIndexMobile);
+    //app.get('/m/show', report.showIndexMobile);
+    //app.get('/m/write', report.writeIndexMobile);
+    //app.get('/m/showsubordinate', report.subordinateIndexMobile);
+    //app.get('/m/setting', report.settingMobile);
+    //app.get('/m/logout', user.logoutMobileIndex);
+    //return app.get('/m/password', user.passwordMobileIndex);
   };
 
 }).call(this);

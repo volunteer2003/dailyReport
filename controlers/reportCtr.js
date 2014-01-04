@@ -175,7 +175,7 @@
 	}
 	
 	
-	console.log('reportModel.getReportContent dateStr:' + data["dateStr"]);
+	console.log('reportCtr-showPage dateStr:' + data["dateStr"]);
     return userModel.hasSubordinate(userId, function(result) {
       if (result) {
         data["hasSubordinate"] = true;
@@ -188,7 +188,7 @@
         }
 		
 		return reportModel.getReportContent(req, function(result) {
-			console.log('reportModel.getReportContent result:' + result);
+			console.log('reportCtr-reportModel.getReportContent result:' + result);
 			if (result) {
 				data["content"] = result;
 			}
@@ -249,7 +249,7 @@
 	
 	var userAllFlag = '0';
 	userAllFlag = req.body.userAllFlag;
-	console.log('getReports-userAllFlag:' + userAllFlag);
+	console.log('reportCtr-getReports-userAllFlag:' + userAllFlag);
 		
     if (!userId) {
       userId = req.session.userId;
