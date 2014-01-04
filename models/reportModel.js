@@ -8,6 +8,8 @@
 
   utils = require("../utils");
 
+  var content_template = "<H1>ABC123</H1>";
+	
   exports.createReport = function(userId, content, dateStr, callback) {
     var client;
     client = utils.createClient();
@@ -213,7 +215,7 @@
   
   exports.getReportContent = function(req, callback) {
 	var _ref, userId;
-	var content_template = "<H1>ABC123</H1>";
+
 	_ref = req.session;
 	userId = _ref.userId;
 	// get this week's title of the report
@@ -355,33 +357,83 @@
 	var response = [];
 	var response_new = [];
 	return getDepartmentId(userId, function(departmentId) {
-		console.log('reportModel-getReportsAll departmentId:' + departmentId);
-		return getReportsWeek(departmentId, dateStr, function(response) {
-		  // need to sequence the userLists to show in the main page
-		  var user = new Array;
-		
-		  for (var x in response) {
-			user[x] = response[x].name;
-		  }
-		  
-		  // re-quence the user name list
-		  var user_sequence = user.sort();
-		  for (var x in user_sequence) {
-			for (var y in response) {
-			  if (response[y].name == user_sequence[x]) {
-				response_new.push({
-                  id: response[y].id,
-                  date: response[y].date,
-                  content: response[y].content	
-			    });
-			  }
-			}			
-		  }
-		  return callback(new Response(1, 'success', response_new));
-		});
+	  console.log('reportModel-getReportsAll departmentId:' + departmentId);
+	  return getColleagues(departmentId, function(usersIdList) {	
+	    console.log('reportModel-getReportsAll usersIdList:' + usersIdList);
+		  return getUsersNameList(usersIdList, function(usersNameList) {
+		    console.log('reportModel-getReportsAll usersNameList:' + usersNameList);
+		    
+			return getReportsWeek(departmentId, dateStr, function(response) {
+		      // need to sequence the userLists to show in the main page
+		      var usersName = usersNameList.sort();
+			  console.log('reportModel-getReportsAll usersNameList:' + usersName);
+			  var userExistFalg = '0'; 
+			  for (var x in usersName) {
+			    userExistFalg = '0'; 
+				for (var y in response) {
+			      if (response[y].name == usersName[x]) {
+					userExistFalg = '1';
+					console.log('reportModel-getReportsAll userExistFalg:1:' + usersName[x]);
+				    response_new.push({
+                      id: response[y].id,
+                      date: response[y].date,
+                      content: response[y].content	
+			        });
+			      }
+			    }
+				
+				// for the user who had not completed the report in the department
+				if (userExistFalg == '0') {
+				  console.log('reportModel-getReportsAll userExistFalg:0:' + usersName[x]);
+				  response_new.push({
+                    id: '0',
+                    date: usersName[x],
+                    content: content_template	 
+			      });
+				}
+		      }
+		      return callback(new Response(1, 'success', response_new));
+		    });
+		  });
+	  });
 	}); 
   };
 
+  // get the usersNameList from the usersIdList
+  getUsersNameList = function (usersIdList, callback) {
+	var client;
+    client = utils.createClient();
+	
+	return client.hgetall("users", function(err, reply) {
+	  if (err) {
+        return utils.showDBError(callback, client);
+      }
+	  //console.log('getDepartmentId reply:' + reply);
+	  var result = false;
+	  var childOfKey, key, value;
+	  var usersNameList = [];
+	
+      for (x in usersIdList) {	
+		
+		for (key in reply) {
+		  value = reply[key];
+          childOfKey = key.split(":");
+		  
+		  if (childOfKey[1] == 'user_name') {
+			if (childOfKey[0] == usersIdList[x]	) {
+			  var userName = value;
+			  
+			  usersNameList.push(userName);
+			  console.log('reportModel-getUsersNameList userName:' + userName);					
+			}
+		  }	
+		}
+	  }
+		return callback(usersNameList);
+	});	
+	
+  }
+  
   // get all the reports from the table dateStr
   getReportsWeek = function(departmentId, dateStr, callback) {
     console.log('reportModel-getReportsWeek-departmentId:' + departmentId);
@@ -480,28 +532,13 @@
 		  if (childOfKey[1] == 'department_id') {
 			if (value == departmentId	) {
 			  var userId = childOfKey[0];
-			  return client.hgetall("users", function(err, reply) {
-		        if (err) {
-                  return utils.showDBError(callback, client);
-                }
-
-		        var childOfKey, key, value;
-		        for (key in reply) {
-		          value = reply[key];
-                  childOfKey = key.split(":");
-		  
-		          if (childOfKey[1] == 'user_name') {
-			        if (userId == childOfKey[0]) {
-					  usersIdList.push(value);
-					  console.log('reportModel-getColleagues userName:' + value);	
-					}  
-				  }
-				}
-				return callback(usersIdList);
-              });				
+			  
+			  usersIdList.push(userId);
+			  console.log('reportModel-getColleagues userId:' + userId);					
 			}
 		  }	
 		}
+		return callback(usersIdList);
 	});	
   }
   
