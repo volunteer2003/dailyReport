@@ -169,7 +169,7 @@
     data["isAdmin"] = utils.isAdmin(req);
 	data["userId"] = userId;
 	data["dateStr"] = req.body.date;
-	
+	data["userName"] = req.body.userName;
 	if (!data["dateStr"]) {
 		data["dateStr"] = dateStr;
 	}

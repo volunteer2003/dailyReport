@@ -134,7 +134,7 @@
         height: 160,
         modal: true,
         buttons: {
-          "删除": function() {
+          "Delete": function() {
             deleteDepartment(departmentId);
             return $(this).dialog("close");
           },

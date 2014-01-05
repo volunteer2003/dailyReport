@@ -173,9 +173,9 @@
       newnode = "" + node + " ul:first";
       for (_i = 0, _len = data.length; _i < _len; _i++) {
         value = data[_i];
-        linode = "<li id='" + value.id + "node'><div id='" + value.id + "'><i class='icon-" + this.iconName + "' /><span class='nodename'>" + value.label + "</span><span class='delete btn btn-danger'>删除</span><span class='update btn btn-warning'>编辑</span></div></li>";
+        linode = "<li id='" + value.id + "node'><div id='" + value.id + "'><i class='icon-" + this.iconName + "' /><span class='nodename'>" + value.label + "</span><span class='delete btn btn-danger'>Delete</span><span class='update btn btn-warning'>Edit</span></div></li>";
         if (value.children) {
-          linode = "<li id='" + value.id + "node'><div id='" + value.id + "'><i class='icon-circle-arrow-down' /><i class='icon-" + this.iconName + "' /><span class='nodename'>" + value.label + "</span><span class='delete btn btn-danger'>删除</span><span class='update btn btn-warning'>编辑</span></div></li>";
+          linode = "<li id='" + value.id + "node'><div id='" + value.id + "'><i class='icon-circle-arrow-down' /><i class='icon-" + this.iconName + "' /><span class='nodename'>" + value.label + "</span><span class='delete btn btn-danger'>Delete</span><span class='update btn btn-warning'>Edit</span></div></li>";
         }
         $(newnode).append(linode);
         newnode2 = "" + newnode + " #" + value.id + "node";

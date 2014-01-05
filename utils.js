@@ -44,7 +44,7 @@
     }
     return result;
   };
-
+  
   exports.isAdmin = function(req) {
 	console.log('isLoginUser(req):' + this.isLoginUser(req));
 	//console.log('req.session.isAdmin:' + req.session.isAdmin;

@@ -20,24 +20,24 @@
         <li ><a href="/logout">Logout</a></li>
     </ul>	
 </header>
-<div id="dialog-confirm" title="删除管理员" style="display:none">
-    <p>确认要删除该管理员吗？</p>
+<div id="dialog-confirm" title="Delete admin" style="display:none">
+    <p>Are you sure to delete the admin?</p>
 </div>
 <section class="container">
   <div id="newAdministrator">
-    <div class="title"><i class=" icon-user"></i><h2>添加管理员</h2> </div>
-      <label for="depar">部门成员:</label>
+    <div class="title"><i class=" icon-user"></i><h2>New administrator</h2> </div>
+      <label for="depar">Department name:</label>
       <select id="depar"
-              data-bind="options: departments, optionsText:'name',value:selectedDepartment, optionsCaption: '选择一个部门'"></select>
-    <label for="users">部门成员:</label>
+              data-bind="options: departments, optionsText:'name',value:selectedDepartment, optionsCaption: 'Choose...'"></select>
+    <label for="users">Department member:</label>
     <select id="users"
             data-bind="options: users, optionsText:'name',value:selectedUser"></select>
-    <div><input id="submitBtn" type="button" value="提交" class="btn btn-primary" required="false"
+    <div><input id="submitBtn" type="button" value="Submit" class="btn btn-primary" required="false"
                 data-bind="click:submit, enable: valid()"/></div>
     </div>
   </div>
     <div id="adminlist">
-        <div class="title"><i class="icon-list"></i><h2>管理员列表</h2> </div>
+        <div class="title"><i class="icon-list"></i><h2>Administrators list</h2> </div>
         <ul data-bind="foreach: admins" class="unstyle">
             <li><span data-bind="text: name"></span><a href="#" class="delete" data-bind="attr:{userId: id}" title="删除管理员权限"><i class="icon-remove"></i></a></li>
         </ul>

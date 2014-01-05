@@ -27,51 +27,51 @@
   <div id="newUser"  data-bind="visible: !updateUser()">
     <div class="title"><i class="icon-user"></i><h2>Create new user</h2> </div>
     <label for="userName">User name:
-        <span data-bind="css:{errorTip: !validUserName()}, visible: !validUserName()">至少6个，最多25个字符</span>
+        <span data-bind="css:{errorTip: !validUserName()}, visible: !validUserName()">should more then 2 letter</span>
         <span data-bind="css:{errorTip: showHasUserTip()}, visible: showHasUserTip()">The user exists</span></label>
     <input id="userName" type="text" required="required" name="userName"
            data-bind="value: userName, valueUpdate:'keyup',event: {focusout: checkUserExit}" />
     <br />
     <label for="password">PASSCODE:
-        <span data-bind="css:{errorTip: !validPassword()}, visible: !validPassword()">至少7个，最多25个字符</span></label>
+        <span data-bind="css:{errorTip: !validPassword()}, visible: !validPassword()">should more then 5 letter</span></label>
     <input type="password" required="required" name="password" id="password"
            data-bind="value:password, valueUpdate:'keyup'"/>
     <label for="repassword">Re-type PASSCODE:
-        <span data-bind="css:{errorTip: !validRePassword()}, visible: !validRePassword()">两次输入的密码不一致</span></label>
+        <span data-bind="css:{errorTip: !validRePassword()}, visible: !validRePassword()">password not matched</span></label>
     <input type="password" required="required" name="repassword" id="repassword"
            data-bind="value:repassword, valueUpdate:'keyup'"/>
     <br/>
-        <label for="userDepartment">所属部门:<span data-bind="css:{errorTip: !selectedDepartment()}, visible: !selectedDepartment()">必须选择一个部门</span></label>
+        <label for="userDepartment">Department:<span data-bind="css:{errorTip: !selectedDepartment()}, visible: !selectedDepartment()">Required field</span></label>
          <select id="userDepartment" name="userDepartment1"
-                 data-bind="options: departments, optionsText:'name', value:selectedDepartment, optionsCaption: '选择所属部门...'"></select>
-        <label for="superior1">直接上级:</label>
+                 data-bind="options: departments, optionsText:'name', value:selectedDepartment, optionsCaption: 'Choose...'"></select>
+        <label for="superior1">Superior:</label>
         <select id="superior1" name="superior1"
-                data-bind="options: superiors, optionsText:'name', value:selectedSuperior, optionsCaption: '选择直接上级...'"></select>
+                data-bind="options: superiors, optionsText:'name', value:selectedSuperior, optionsCaption: 'Choose...'"></select>
     <div><input id="submitBtn" type="submit" value="Submit" class="btn btn-primary"
                 data-bind="click:submit, enable: valid()" /></div>
   </div>
     <div id="updateUser" data-bind="visible: updateUser()">
         <div class="title"><i class="icon-edit"></i><h2>Update user's information</h2> </div>
         <label for="userName1">User name:
-            <span data-bind="css:{errorTip: !validUserName1()}, visible: !validUserName1()">至少6个，最多25个字符</span></label>
+            <span data-bind="css:{errorTip: !validUserName1()}, visible: !validUserName1()">should more then 2 letter</span></label>
         <input id="userName1" type="text" required="required" name="userName1"
                data-bind="value: userName1, valueUpdate:'keyup'" />
         <br />
-        <label for="password1">密码: 为空表示不修改原密码
-            <!-- <span data-bind="css:{errorTip: !validPassword1()}, visible: !validPassword1()">至少7个，最多25个字符</span>--></label>
+        <label for="password1">PASSCODE: 
+            <!-- <span data-bind="css:{errorTip: !validPassword1()}, visible: !validPassword1()">should more then 5 letter</span>--></label>
         <input type="password"  name="password1" id="password1"
                data-bind="value:password1, valueUpdate:'keyup'"/>
-        <label for="repassword1">重复密码:
-            <span data-bind="css:{errorTip: !validRePassword1()}, visible: !validRePassword1()">两次输入的密码不一致</span></label>
+        <label for="repassword1">Re-type PASSCODE:
+            <span data-bind="css:{errorTip: !validRePassword1()}, visible: !validRePassword1()">password not matched</span></label>
         <input type="password" name="repassword1" id="repassword1"
                data-bind="value:repassword1, valueUpdate:'keyup'"/>
         <br/>
-        <label for="userDepartment1">所属部门:<span data-bind="css:{errorTip: !selectedDepartment1()}, visible: !selectedDepartment1()">必须选择一个部门</span></label>
+        <label for="userDepartment1">Department:<span data-bind="css:{errorTip: !selectedDepartment1()}, visible: !selectedDepartment1()">must choose one department</span></label>
         <select id="userDepartment1" name="userDepartment1"
-                data-bind="options: departments, optionsText:'name', value:selectedDepartment1, optionsCaption: '选择所属部门...'"></select>
-        <label for="superior">直接上级:</label>
+                data-bind="options: departments, optionsText:'name', value:selectedDepartment1, optionsCaption: 'Choose...'"></select>
+        <label for="superior">Superior:</label>
         <select id="superior" name="superior"
-                data-bind="options: superiors1, optionsText:'name', value:selectedSuperior1, optionsCaption: '选择直接上级...'"></select>
+                data-bind="options: superiors1, optionsText:'name', value:selectedSuperior1, optionsCaption: 'Choose...'"></select>
         <div><input id="updateBtn" type="submit" value="Update" class="btn btn-primary"
                     data-bind="enable: valid1()" />
 

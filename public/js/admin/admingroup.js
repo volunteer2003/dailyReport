@@ -16,7 +16,7 @@
     self.submit = function() {
       var user;
       if (!self.valid()) {
-        console.log("fail: 必须选择一个成员");
+        console.log("fail: Must choose one");
       }
       user = self.selectedUser();
       return UserModel.setAdministrator(user["id"], function(response) {
@@ -136,7 +136,7 @@
         height: 160,
         modal: true,
         buttons: {
-          "删除": function() {
+          "Delete": function() {
             deleteAdmin(userId);
             return $(this).dialog("close");
           },

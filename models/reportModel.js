@@ -388,7 +388,7 @@
 				  response_new.push({
                     id: '0',
                     date: usersName[x],
-                    content: content_template	 
+                    content: 'Not update the report yet!'	 
 			      });
 				}
 		      }
